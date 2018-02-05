@@ -42,9 +42,10 @@ def reconnect():
             print("Retry #%d in 30 seconds." % retries)
             retries += 1
             time.sleep(30)
-reconnect()
 
+reconnect()
 miner = None
+
 def mine(token):
     global miner, mining
     print("Switching miner")
