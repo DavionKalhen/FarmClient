@@ -1,8 +1,24 @@
 #!/usr/bin/env python
 
-import socket, time, fcntl, os, select, datetime
-from miners import *
+import socket, time, fcntl, os, select, datetime, subprocess
 import subprocess
+try:
+    from miners import *    
+except ImportError:
+    ps = subprocess.Popen(('lspci'), stdout=subprocess.PIPE)
+    grep = subprocess.Popen(('grep', 'NVIDIA'), stdin=ps.stdout, stdout=subprocess.PIPE)
+    grep = subprocess.Popen(('grep', 'VGA'), stdin=grep.stdout, stdout=subprocess.PIPE)
+    output = subprocess.check_output(('wc', '-l'), stdin=grep.stdout)
+    print "There are compatable %s devices" % output.strip()
+    with open('device.py', 'w') as the_file:
+        devices = int(output.strip())
+        devl = ""
+        for i in range(0, devices):
+            devl += "%d," % i
+        if devl[-1] == ',':
+            devl = devl[:-1]
+        the_file.write('device = "%s"' % devl)
+    from miners import *
 
 mining = 'None'
 TCP_IP = '192.168.0.23'
