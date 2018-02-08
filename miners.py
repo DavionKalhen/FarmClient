@@ -13,7 +13,7 @@ lyra2v2 = '/home/miner/miners/vertminer-nvidia/vertminer'
 # All miner configuration here.  Add/Change/Delete pairs as nessisary
 #Altcommunity
 #Bytecoin 
-BitcoinGold           = '%s --server us-east1.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20595' % (equihash, username, workername)
+BitcoinGold           = '%s --server us-east1.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20595 --api' % (equihash, username, workername)
 DGBGroestl           = '%s -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u %s.%s -p x' % (ccminer, username, workername)
 #Decred
 #DigitalNote
@@ -67,4 +67,5 @@ mine_map = { 'ZCL': Zclassic,
 mine_api = { 'ZCL': equihash_api,
              'ZEC': equihash_api,
              'ZEN': equihash_api,
+             'BTG': equihash_api,
            }
