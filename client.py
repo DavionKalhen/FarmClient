@@ -82,7 +82,7 @@ def mine(token):
     except KeyError:
         print("Got unknown token from server. %s" % token)
     else:
-        #miner = subprocess.Popen(tomine.split(' '), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        miner = subprocess.Popen(tomine.split(' '), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print("Now mining %s" % token)
         mining = token
     
