@@ -116,7 +116,7 @@ while 1:
             start_mining = True
             print("Server updated us. Most profitable coin to mine is %s." % token)
             if token == mining:
-                print("We are already mining %s" % token)
+                print("We are already minging %s" % token)
             else:
                 mine(token)
         elif data.startswith('stats'):
@@ -143,7 +143,10 @@ while 1:
                      stdout=subprocess.PIPE,
                      stderr=subprocess.STDOUT)
             sys.exit(1)
-            
+        elif data.startswith('stop'):
+            print("Server thinks we need to stop")
+            if miner:
+                miner.kill()
         else:
             try:
                 resp = response[data.lower().strip()]
