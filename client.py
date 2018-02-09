@@ -21,7 +21,7 @@ except ImportError:
     from miners import *
 
 mining = 'None'
-TCP_IP = '192.168.0.33'
+TCP_IP = 'www.nashmoving.com'
 TCP_PORT = 5001
 BUFFER_SIZE = 20
 
