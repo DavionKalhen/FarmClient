@@ -21,8 +21,8 @@ except ImportError:
     from miners import *
 
 mining = 'None'
-TCP_IP = '192.168.0.23'
-TCP_PORT = 5000
+TCP_IP = '192.168.0.33'
+TCP_PORT = 5001
 BUFFER_SIZE = 20
 
 register = "register %s" % socket.gethostname()
@@ -74,6 +74,7 @@ def mine(token):
             output, errors = miner.communicate()
             print(output)
             print(errors)
+            time.sleep(15) #give time for api socket to close
         except ValueError: #Already ded.
             pass
     try:
@@ -90,7 +91,8 @@ start_mining = False
 
 def socket_send(s, text):
     try:
-        s.send(text)
+        s.send(text + "\r\n")
+        print("Sent: %s" % text)
     except socket.error as e:
         print("Server connection lost. Could not send %s.\n%s\nAttempting reconnect" % (text, e))
         reconnect()
@@ -128,7 +130,8 @@ while 1:
         else:
             try:
                 resp = response[data.lower().strip()]
-                outbuf.append(resp)
+                socket_send(s, resp)
+                print("Responding with %s" % resp)
             except KeyError:
                 print("Got unknown response from server. %s" % data)
                 #Check for disconnect.
