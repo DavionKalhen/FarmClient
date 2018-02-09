@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import socket, time, fcntl, os, select, datetime, subprocess
+import socket, time, fcntl, os, select, datetime, subprocess, sys
 import subprocess
 try:
     from miners import *    
@@ -74,7 +74,7 @@ def mine(token):
             output, errors = miner.communicate()
             print(output)
             print(errors)
-            time.sleep(15) #give time for api socket to close
+            time.sleep(30) #give time for api socket to close
         except ValueError: #Already ded.
             pass
     try:
@@ -123,10 +123,27 @@ while 1:
             outbuf.append('stats %s' % mine_api[mining]())
         elif data.startswith('restart'):
             print("Server thinks we need to restart our miner.")
-            if last_start - datetime.datetime.now() < datetime.timedelta(minutes=5):
+            if datetime.datetime.now() - last_start < datetime.timedelta(minutes=5):
                 print("We restarted the miner less than 5 minutes ago. We shall wait.")
             else:
                 mine(mining)
+        elif data.startswith('update'):                
+            print("Server thinks we need to update our client. Updating.")
+            if miner:
+                miner.kill()
+            p = subprocess.Popen('git pull'.split(' '),
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.STDOUT)
+            (out, err) = p.communicate()
+            print(out)
+            print(err)
+            print("Client update attempted.")
+            print("Restarting client.")
+            p = subprocess.Popen('./client.py',
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.STDOUT)
+            sys.exit(1)
+            
         else:
             try:
                 resp = response[data.lower().strip()]
