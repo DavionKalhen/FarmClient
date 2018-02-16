@@ -24,12 +24,13 @@ mining = 'None'
 TCP_IP = 'www.nashmoving.com'
 TCP_PORT = 5001
 BUFFER_SIZE = 20
+PING = 60
 
 register = "register %s" % socket.gethostname()
 update = "update %s" % mining
 response = { 
                 "welcome" : register,
-            }
+           }
 s = None
 
 def pipe_read(output):
@@ -92,7 +93,6 @@ start_mining = False
 def socket_send(s, text):
     try:
         s.send(text + "\r\n")
-        print("Sent: %s" % text)
     except socket.error as e:
         print("Server connection lost. Could not send %s.\n%s\nAttempting reconnect" % (text, e))
         reconnect()
@@ -106,8 +106,9 @@ def socket_recv(s, size):
         return ""
     return data
 last_start = datetime.datetime.now()
+ping = PING
 while 1:
-    ready = select.select([s], [], [], 200)
+    ready = select.select([s], [], [], 1)
     if ready[0]:
         data = socket_recv(s, BUFFER_SIZE)
 
@@ -120,7 +121,7 @@ while 1:
             else:
                 mine(token)
         elif data.startswith('stats'):
-            outbuf.append('stats %s' % mine_api[mining]())
+            socket_send(s, 'stats %s' % mine_api[mining]())
         elif data.startswith('restart'):
             print("Server thinks we need to restart our miner.")
             if datetime.datetime.now() - last_start < datetime.timedelta(minutes=5):
@@ -147,6 +148,13 @@ while 1:
             print("Server thinks we need to stop")
             if miner:
                 miner.kill()
+        elif data.startswith('smi'):
+            print("Server has requested SMI")
+            p = subprocess.Popen('nvidia-smi')
+            (out, err) = p.communicate()
+            socket_send(s, 'smi %s' % out)
+        elif data.startswith('pong'):
+            print("Server ponged us.")
         else:
             try:
                 resp = response[data.lower().strip()]
@@ -155,16 +163,8 @@ while 1:
             except KeyError:
                 print("Got unknown response from server. %s" % data)
                 #Check for disconnect.
-                socket_send(s, "update %s" % mining)
-    try:
-        msg = outbuf.pop(0)
-        s.send(msg)
-        
-    except IndexError:
-        pass # nothing to send
-    except socket.error as e:
-        print("Error connecting to server. %s\nAttempting reconnect." % e)
-        reconnect()
+                socket_send(s, "pong" % mining)
+
     if start_mining and miner.poll() is not None:
         print("Miner stopped, restarting.")
         mine(mining)
@@ -175,7 +175,11 @@ while 1:
             print(out)
         if len(err.strip()) > 0:
             print(err)
-        
-        
-    time.sleep(1)
+
+    ping -= 1
+    
+    if ping <= 0:
+        socket_send(s, 'ping')
+        ping = PING
+    
 s.close()
