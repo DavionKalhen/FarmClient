@@ -163,7 +163,7 @@ while 1:
             except KeyError:
                 print("Got unknown response from server. %s" % data)
                 #Check for disconnect.
-                socket_send(s, "pong" % mining)
+                socket_send(s, "ping")
 
     if start_mining and miner.poll() is not None:
         print("Miner stopped, restarting.")

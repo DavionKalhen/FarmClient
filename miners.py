@@ -44,7 +44,7 @@ MyriadGroestl        = '%s -a myr-gr -o stratum+tcp://us-east1.myriadcoin-groest
 #Ubiq
 Vertcoin              = '%s -o stratum+tcp://hub.miningpoolhub.com:20507 -u %s.%s -p x -d %s' % (lyra2v2, username, workername, device)
 Zcash                 = '%s --server us-east1.zcash.miningpoolhub.com --user %s.%s --pass x --port 20570 --api' % (equihash, username, workername)
-Zclassic              = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20575 --api' % (equihash, username, workername)
+Zclassic              = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20575 --api --Fee 0' % (equihash, username, workername)
 Zencash               = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20594 --api' % (equihash, username, workername)
 
 def equihash_api():
