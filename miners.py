@@ -5,7 +5,7 @@ workername        = socket.gethostname()
 password              = 'legion1'
 
 ccminer = '/home/miner/miners/ccminer/ccminer'
-equihash = '/home/miner/miners/equihash2/bminer'
+equihash = '/home/miner/miners/equihash/miner'
 neoscrypt = '/home/miner/miners/nsgminer/nsgminer'
 lyra2v2 = '/home/miner/miners/vertminer-nvidia/vertminer'
 
