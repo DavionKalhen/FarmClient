@@ -5,7 +5,7 @@ workername        = socket.gethostname()
 password              = 'legion1'
 
 ccminer = '/home/miner/miners/ccminer/ccminer'
-equihash = '/home/miner/miners/equihash/miner'
+equihash = '/home/miner/miners/equihash2/bminer'
 neoscrypt = '/home/miner/miners/nsgminer/nsgminer'
 lyra2v2 = '/home/miner/miners/vertminer-nvidia/vertminer'
 
@@ -69,3 +69,6 @@ mine_api = { 'ZCL': equihash_api,
              'ZEN': equihash_api,
              'BTG': equihash_api,
            }
+
+def bmine2api(miner, stats):
+    

@@ -150,7 +150,7 @@ while 1:
                 miner.kill()
         elif data.startswith('smi'):
             print("Server has requested SMI")
-            p = subprocess.Popen('nvidia-smi')
+            p = subprocess.Popen('nvidia-smi', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (out, err) = p.communicate()
             socket_send(s, 'smi %s' % out)
         elif data.startswith('pong'):
