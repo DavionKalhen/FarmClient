@@ -152,7 +152,7 @@ while 1:
             print("Server has requested SMI")
             p = subprocess.Popen('nvidia-smi', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (out, err) = p.communicate()
-            socket_send(s, 'smi %s' % out)
+            socket_send(s, 'smi %s' % out.replace('\n', '[/'))
         elif data.startswith('pong'):
             print("Server ponged us.")
         else:
