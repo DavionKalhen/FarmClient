@@ -70,5 +70,3 @@ mine_api = { 'ZCL': equihash_api,
              'BTG': equihash_api,
            }
 
-def bmine2api(miner, stats):
-    
