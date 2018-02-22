@@ -25,6 +25,11 @@ TCP_IP = 'www.nashmoving.com'
 TCP_PORT = 5001
 BUFFER_SIZE = 20
 PING = 60
+outbuf = []
+start_mining = False
+miner = None
+last_start = datetime.datetime.now()
+ping = PING
 
 register = "register %s" % socket.gethostname()
 update = "update %s" % mining
@@ -41,27 +46,45 @@ def pipe_read(output):
         return output.read()
     except:
         return ""
+ireconnect = False
+init_connect = False
+RECONNECTION_TIME = 30
+DEFAULT_COIN = 'ZEC'
+retries = 0
+def sock_err(s, err, init):
+    global ireconnect, mining, retries
 
-def reconnect():
-    global s
+    print("Socket failed with error %s" %(err))
+    print("Retry #%d in 30 seconds." % retries)
+    retries += 1
+    ireconnect = RECONNECTION_TIME
+    if init:
+        mining = DEFAULT_COIN
+        mine(mining)
+    else:
+        retries = 0
+        ireconnect = None
+
+
+def reconnect(init=False):
+    global s, retries
     retries = 1
-    while 1:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            print "Socket successfully created."
-            s.connect((TCP_IP, TCP_PORT))
-            print "Connected to Server."
-            s.setblocking(0)
-            print "Set to non-blocking"
-            break
-        except socket.error as err:
-            print("Socket failed with error %s" %(err))
-            print("Retry #%d in 30 seconds." % retries)
-            retries += 1
-            time.sleep(30)
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print "Socket successfully created."
+        s.settimeout(15)
+        s.connect((TCP_IP, TCP_PORT))
+        print "Connected to Server."
+        s.setblocking(0)
+        print "Set to non-blocking"
+    except socket.error as err:
+        sock_err(s, err, init)
+    except socket.timeout as err:
+        sock_err(s, err, init)
+    else:
+        retries = 0
+        ireconnect = None
 
-reconnect()
-miner = None
 
 def mine(token):
     global miner, mining
@@ -87,8 +110,6 @@ def mine(token):
         print("Now mining %s" % token)
         mining = token
     
-outbuf = []
-start_mining = False
 
 def socket_send(s, text):
     try:
@@ -105,11 +126,19 @@ def socket_recv(s, size):
         reconnect()
         return ""
     return data
-last_start = datetime.datetime.now()
-ping = PING
+
+reconnect(True)
+
+
 while 1:
+    if ireconnect is not None:
+        if ireconnect <= 0:
+            reconnect()
+        else:
+            ireconnect -= 1
+
     ready = select.select([s], [], [], 1)
-    if ready[0]:
+    if ready[0] and ireconnect is None:
         data = socket_recv(s, BUFFER_SIZE)
 
         if data.startswith('mine'):
