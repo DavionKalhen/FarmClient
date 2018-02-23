@@ -21,7 +21,7 @@ except ImportError:
     from miners import *
 
 mining = 'None'
-TCP_IP = 'www.nashmoving.com'
+TCP_IP = 'localhost'
 TCP_PORT = 5001
 BUFFER_SIZE = 20
 PING = 60
@@ -46,7 +46,7 @@ def pipe_read(output):
         return output.read()
     except:
         return ""
-ireconnect = False
+ireconnect = None
 init_connect = False
 RECONNECTION_TIME = 30
 DEFAULT_COIN = 'ZEC'
@@ -74,16 +74,16 @@ def reconnect(init=False):
         print "Socket successfully created."
         s.settimeout(15)
         s.connect((TCP_IP, TCP_PORT))
+        s.settimeout(0)
         print "Connected to Server."
         s.setblocking(0)
         print "Set to non-blocking"
+        retries = 0
+        ireconnect = None
     except socket.error as err:
         sock_err(s, err, init)
     except socket.timeout as err:
         sock_err(s, err, init)
-    else:
-        retries = 0
-        ireconnect = None
 
 
 def mine(token):
