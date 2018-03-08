@@ -13,7 +13,7 @@ lyra2v2 = '/home/miner/miners/vertminer-nvidia/vertminer'
 # All miner configuration here.  Add/Change/Delete pairs as nessisary
 #Altcommunity
 #Bytecoin 
-BitcoinGold           = '%s --server us-east1.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20595 --api' % (equihash, username, workername)
+BitcoinGold           = '%s --server us-east1.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20595 --api --Fee 0' % (equihash, username, workername)
 DGBGroestl           = '%s -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u %s.%s -p x' % (ccminer, username, workername)
 #Decred
 #DigitalNote
@@ -43,9 +43,9 @@ MyriadGroestl        = '%s -a myr-gr -o stratum+tcp://us-east1.myriadcoin-groest
 #Sumokoin
 #Ubiq
 Vertcoin              = '%s -o stratum+tcp://hub.miningpoolhub.com:20507 -u %s.%s -p x -d %s' % (lyra2v2, username, workername, device)
-Zcash                 = '%s --server us-east1.zcash.miningpoolhub.com --user %s.%s --pass x --port 20570 --api' % (equihash, username, workername)
+Zcash                 = '%s --server us-east1.zcash.miningpoolhub.com --user %s.%s --pass x --port 20570 --api --Fee 0' % (equihash, username, workername)
 Zclassic              = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20575 --api --Fee 0' % (equihash, username, workername)
-Zencash               = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20594 --api' % (equihash, username, workername)
+Zencash               = '%s --server us-east.equihash-hub.miningpoolhub.com --user %s.%s --pass x --port 20594 --api --Fee 0' % (equihash, username, workername)
 
 def equihash_api():
     try:
